@@ -37,14 +37,7 @@ const AddTodo: React.FC<AddTodoProps> = ({ setTasks }) => {
         </button>
         <Search />
       </div>
-      <select className="select select-bordered">
-        <option disabled selected>
-          All
-        </option>
-        <option>All</option>
-        <option>Active</option>
-        <option>Completed</option>
-      </select>
+
       <ModalTodo
         isOpen={isModalOpen}
         mode={editTask ? "edit" : "add"}
