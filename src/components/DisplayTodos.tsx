@@ -37,43 +37,46 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
   return (
     <div className="grid gap-4 my-4 p-8 w-full bg-base-200 dark:bg-base-300 rounded-lg">
       {tasks.map((task) => (
-        <div
-          key={task.id}
-          className="p-4 flex justify-between items-center bg-white dark:bg-base-100 rounded-lg "
-        >
-          <div className="flex items-center gap-4">
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={task.isComplete}
-              onChange={() =>
-                setTasks((prevTasks) =>
-                  prevTasks.map((t) =>
-                    t.id === task.id ? { ...t, isComplete: !t.isComplete } : t
+        <>
+        
+          <div
+            key={task.id}
+            className="p-4 flex justify-between items-center bg-white dark:bg-base-100 rounded-lg "
+          >
+            <div className="flex items-center gap-4">
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={task.isComplete}
+                onChange={() =>
+                  setTasks((prevTasks) =>
+                    prevTasks.map((t) =>
+                      t.id === task.id ? { ...t, isComplete: !t.isComplete } : t
+                    )
                   )
-                )
-              }
-            />
-            <div>
-              <p className="text-xl font-medium">{task.title}</p>
-              <p>{task.tag}</p>
+                }
+              />
+              <div>
+                <p className="text-xl font-medium">{task.title}</p>
+                <p>{task.tag}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <button
+                className="btn btn-square hover:bg-orange-500"
+                onClick={() => handleEdit(task)}
+              >
+                <SquarePen className="hover:text-white" />
+              </button>
+              <button
+                className="btn btn-square hover:bg-red-500"
+                onClick={() => handleDelete(task.id)}
+              >
+                <Trash className="hover:text-white" />
+              </button>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <button
-              className="btn btn-square hover:bg-orange-500"
-              onClick={() => handleEdit(task)}
-            >
-              <SquarePen className="hover:text-white" />
-            </button>
-            <button
-              className="btn btn-square hover:bg-red-500"
-              onClick={() => handleDelete(task.id)}
-            >
-              <Trash className="hover:text-white" />
-            </button>
-          </div>
-        </div>
+        </>
       ))}
       {editTask && (
         <ModalTodo

@@ -24,6 +24,7 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
   const [subTasks, setSubTasks] = useState<
     { title: string; isComplete: boolean }[]
   >([]);
+  const [editSubTaskIndex, setEditSubTaskIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (mode === "edit" && task) {
@@ -31,14 +32,44 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
       setDescription(task.description);
       setTag(task.tag);
       setSubTasks(task.subTask);
+    } else {
+      resetForm();
     }
   }, [mode, task]);
 
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setTag("");
+    setSubTask("");
+    setSubTasks([]);
+    setEditSubTaskIndex(null);
+  };
+
   const handleAddSubTask = () => {
     if (subTask) {
-      setSubTasks([...subTasks, { title: subTask, isComplete: false }]);
+      if (editSubTaskIndex !== null) {
+        const updatedSubTasks = [...subTasks];
+        updatedSubTasks[editSubTaskIndex] = {
+          ...updatedSubTasks[editSubTaskIndex],
+          title: subTask,
+        };
+        setSubTasks(updatedSubTasks);
+        setEditSubTaskIndex(null);
+      } else {
+        setSubTasks([...subTasks, { title: subTask, isComplete: false }]);
+      }
       setSubTask("");
     }
+  };
+
+  const handleEditSubTask = (index: number) => {
+    setSubTask(subTasks[index].title);
+    setEditSubTaskIndex(index);
+  };
+
+  const handleDeleteSubTask = (index: number) => {
+    setSubTasks(subTasks.filter((_, i) => i !== index));
   };
 
   const handleSave = () => {
@@ -52,6 +83,7 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
         subTask: subTasks,
       };
       onSave(newTask);
+      resetForm();
       onClose();
     }
   };
@@ -93,7 +125,11 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
               placeholder="Add your tag"
               className="input input-bordered w-full placeholder:text-base"
             />
-            <button type="button" className="btn btn-square btn-outline">
+            <button
+              type="button"
+              className="btn btn-square btn-outline"
+              onClick={handleAddSubTask}
+            >
               <Plus />
             </button>
           </div>
@@ -110,7 +146,7 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
               className="btn btn-outline"
               onClick={handleAddSubTask}
             >
-              Add Sub Task
+              {editSubTaskIndex !== null ? "Edit Sub Task" : "Add Sub Task"}
             </button>
           </div>
           <div className="flex flex-col gap-4">
@@ -128,8 +164,18 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
                   <p className="text-xl">{subTask.title}</p>
                 </div>
                 <div className="flex gap-4">
-                  <SquarePen />
-                  <Trash className="hover:text-red-500 hover:shadow-xl" />
+                  <button
+                    className="btn btn-sm btn-square hover:bg-orange-500"
+                    onClick={() => handleEditSubTask(index)}
+                  >
+                    <SquarePen className="hover:text-white" />
+                  </button>
+                  <button
+                    className="btn btn-sm btn-square hover:bg-red-500"
+                    onClick={() => handleDeleteSubTask(index)}
+                  >
+                    <Trash className="w-5 h-5 hover:text-white" />
+                  </button>
                 </div>
               </div>
             ))}
