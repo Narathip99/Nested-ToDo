@@ -72,24 +72,6 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
     );
   };
 
-  // handle checkbox change for subtasks
-  const handleSubTaskCheckboxChange = (taskId: number, subTaskId: number) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId
-          ? {
-              ...task,
-              subTask: task.subTask.map((subTask) =>
-                subTask.id === subTaskId
-                  ? { ...subTask, isComplete: !subTask.isComplete }
-                  : subTask
-              ),
-            }
-          : task
-      )
-    );
-  };
-
   return (
     <section className="grid gap-4 my-4 p-8 w-full bg-base-200 dark:bg-base-300 rounded-lg shadow-lg">
       <Toolbar
@@ -117,7 +99,7 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              {task.subTask.length > 0 && (
+              {task.subTask && task.subTask.length > 0 && (
                 <button
                   className="btn btn-square"
                   onClick={() => toggleExpandSubTasks(task.id)}
@@ -143,30 +125,24 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
               </button>
             </div>
           </div>
-          {expandSubTasks.includes(task.id) && task.subTask.length > 0 && (
-            <div className="mt-4 ml-8">
-              {task.subTask.map((subTask) => (
-                <div
-                  key={subTask.id}
-                  className="flex justify-between items-center mb-2 p-2 bg-gray-100 dark:bg-base-200 rounded-lg"
-                >
-                  <div className="flex items-center gap-4">
-                    <input
-                      type="checkbox"
-                      className="checkbox"
-                      checked={subTask.isComplete}
-                      onChange={() =>
-                        handleSubTaskCheckboxChange(task.id, subTask.id)
-                      }
-                    />
-                    <div>
-                      <p className="text-lg">{subTask.title}</p>
+          {expandSubTasks.includes(task.id) &&
+            task.subTask &&
+            task.subTask.length > 0 && (
+              <div className="mt-4 ml-8">
+                {task.subTask.map((subTask) => (
+                  <div
+                    key={subTask.id}
+                    className="flex justify-between items-center mb-2 p-2 bg-gray-100 dark:bg-base-200 rounded-lg"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <p className="text-lg">{subTask.title}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
         </div>
       ))}
       {editTask && (

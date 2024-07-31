@@ -22,7 +22,7 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
   const [tag, setTag] = useState("");
   const [subTask, setSubTask] = useState("");
   const [subTasks, setSubTasks] = useState<
-    { title: string; isComplete: boolean }[]
+    { id: number; title: string; isComplete: boolean }[]
   >([]);
   const [editSubTaskIndex, setEditSubTaskIndex] = useState<number | null>(null);
 
@@ -31,7 +31,7 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
       setTitle(task.title);
       setDescription(task.description);
       setTag(task.tag);
-      setSubTasks(task.subTask);
+      setSubTasks(task.subTask || []); // Provide a default empty array if subTask is undefined
     } else {
       resetForm();
     }
@@ -57,7 +57,10 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
         setSubTasks(updatedSubTasks);
         setEditSubTaskIndex(null);
       } else {
-        setSubTasks([...subTasks, { title: subTask, isComplete: false }]);
+        setSubTasks([
+          ...subTasks,
+          { id: Date.now(), title: subTask, isComplete: false },
+        ]);
       }
       setSubTask("");
     }
@@ -152,15 +155,10 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
           <div className="flex flex-col gap-4">
             {subTasks.map((subTask, index) => (
               <div
-                key={index}
+                key={subTask.id}
                 className="flex justify-between items-center gap-4"
               >
                 <div className="flex gap-2 items-center">
-                  <input
-                    type="checkbox"
-                    defaultChecked={subTask.isComplete}
-                    className="checkbox"
-                  />
                   <p className="text-xl">{subTask.title}</p>
                 </div>
                 <div className="flex gap-4">
