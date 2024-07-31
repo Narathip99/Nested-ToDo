@@ -1,6 +1,12 @@
 import React from "react";
 
-const Toolbar = ({ filter, setFilter, filteredTasks }) => {
+// types
+import { ToolbarProps } from "../types/types";
+const Toolbar: React.FC<ToolbarProps> = ({
+  filter,
+  setFilter,
+  filteredTasks,
+}) => {
   const handleFilter = (filter: "All" | "Active" | "Completed") => {
     switch (filter) {
       case "All":
@@ -20,7 +26,7 @@ const Toolbar = ({ filter, setFilter, filteredTasks }) => {
       <p className="text-gray-500 font-medium">
         {filteredTasks.length} items left
       </p>
-      <div className="flex gap-4 items-end ">
+      <div className="flex gap-4 items-end">
         <button
           onClick={() => handleFilter("All")}
           className={`${filter === "All" ? "font-semibold duration-200" : ""}`}
