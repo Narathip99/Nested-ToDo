@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { ModalTodoProps } from "../types/types";
-// icons
-import { Plus, SquarePen, Trash } from "lucide-react";
-import { Task } from "../types/types";
+import { ModalTodoProps, Task } from "../types/types";
+import { SquarePen, Trash } from "lucide-react";
+import { requiredInput } from "../utils/requiredInput";
 
 const ModalTodo: React.FC<ModalTodoProps> = ({
   isOpen,
@@ -14,35 +13,36 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tag, setTag] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
   const [subTask, setSubTask] = useState("");
   const [subTasks, setSubTasks] = useState<
     { id: number; title: string; isComplete: boolean }[]
   >([]);
   const [editSubTaskIndex, setEditSubTaskIndex] = useState<number | null>(null);
+  const [editTagIndex, setEditTagIndex] = useState<number | null>(null);
 
-  // check mode add or edit
   useEffect(() => {
     if (mode === "edit" && task) {
       setTitle(task.title);
       setDescription(task.description);
-      setTag(task.tag);
+      setTags(task.tags);
       setSubTasks(task.subTask || []);
     } else {
       resetForm();
     }
   }, [mode, task]);
 
-  // reset form
   const resetForm = () => {
     setTitle("");
     setDescription("");
     setTag("");
+    setTags([]);
     setSubTask("");
     setSubTasks([]);
     setEditSubTaskIndex(null);
+    setEditTagIndex(null);
   };
 
-  // handle add sub task
   const handleAddSubTask = () => {
     if (subTask) {
       if (editSubTaskIndex !== null) {
@@ -63,18 +63,38 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
     }
   };
 
-  // handle edit sub task
+  const handleAddTag = () => {
+    if (tag) {
+      if (editTagIndex !== null) {
+        const updatedTags = [...tags];
+        updatedTags[editTagIndex] = tag;
+        setTags(updatedTags);
+        setEditTagIndex(null);
+      } else {
+        setTags([...tags, tag]);
+      }
+      setTag("");
+    }
+  };
+
   const handleEditSubTask = (index: number) => {
     setSubTask(subTasks[index].title);
     setEditSubTaskIndex(index);
   };
 
-  // handle delete sub task
+  const handleEditTag = (index: number) => {
+    setTag(tags[index]);
+    setEditTagIndex(index);
+  };
+
   const handleDeleteSubTask = (index: number) => {
     setSubTasks(subTasks.filter((_, i) => i !== index));
   };
 
-  // handle sub task checkbox change
+  const handleDeleteTag = (index: number) => {
+    setTags(tags.filter((_, i) => i !== index));
+  };
+
   const handleSubTaskCheckboxChange = (index: number) => {
     const updatedSubTasks = subTasks.map((subTask, i) =>
       i === index ? { ...subTask, isComplete: !subTask.isComplete } : subTask
@@ -82,21 +102,22 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
     setSubTasks(updatedSubTasks);
   };
 
-  // handle save
   const handleSave = () => {
-    if (title && description) {
-      const newTask: Task = {
-        id: mode === "add" ? Date.now() : task!.id,
-        title,
-        description,
-        tag,
-        isComplete: mode === "edit" ? task!.isComplete : false,
-        subTask: subTasks,
-      };
-      onSave(newTask);
-      resetForm();
-      onClose();
+    if (requiredInput(title)) {
+      return;
     }
+
+    const newTask: Task = {
+      id: mode === "add" ? Date.now() : task!.id,
+      title,
+      description,
+      tags,
+      isComplete: mode === "edit" ? task!.isComplete : false,
+      subTask: subTasks,
+    };
+    onSave(newTask);
+    resetForm();
+    onClose();
   };
 
   return (
@@ -128,7 +149,7 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
             className="textarea textarea-bordered placeholder:text-base w-full"
             placeholder="Add your description"
           ></textarea>
-          <div className="flex justify-center items-center gap-4">
+          <div className="flex gap-4">
             <input
               type="text"
               value={tag}
@@ -138,12 +159,40 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
             />
             <button
               type="button"
-              className="btn btn-square btn-outline"
-              onClick={handleAddSubTask}
+              className="btn btn-outline"
+              onClick={handleAddTag}
             >
-              <Plus />
+              {editTagIndex !== null ? "Edit Tag" : "Add Tag"}
             </button>
           </div>
+          {tags.length > 0 && (
+            <div className="flex flex-col gap-4">
+              {tags.map((tag, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center gap-4"
+                >
+                  <p className="text-xl">{tag}</p>
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-square hover:bg-orange-500"
+                      onClick={() => handleEditTag(index)}
+                    >
+                      <SquarePen className="hover:text-white" />
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-square hover:bg-red-500"
+                      onClick={() => handleDeleteTag(index)}
+                    >
+                      <Trash className="w-5 h-5 hover:text-white" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
           <div className="flex gap-4">
             <input
               type="text"
@@ -178,12 +227,14 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
                   </div>
                   <div className="flex gap-4">
                     <button
+                      type="button"
                       className="btn btn-sm btn-square hover:bg-orange-500"
                       onClick={() => handleEditSubTask(index)}
                     >
                       <SquarePen className="hover:text-white" />
                     </button>
                     <button
+                      type="button"
                       className="btn btn-sm btn-square hover:bg-red-500"
                       onClick={() => handleDeleteSubTask(index)}
                     >

@@ -9,7 +9,7 @@ export interface Task {
   id: number;
   title: string;
   description: string;
-  tag: string;
+  tags: string[];
   isComplete: boolean;
   subTask?: SubTask[];
 }
