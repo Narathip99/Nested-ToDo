@@ -15,3 +15,6 @@ Nested-ToDo is an interview workshop project from CodeSmash. This application al
 - **TypeScript:** A statically typed superset of JavaScript that adds optional types.
 - **Tailwind CSS:** A utility-first CSS framework for rapidly building custom user interfaces.
 - **Daisy UI:** A plugin for Tailwind CSS that provides a set of components for building modern user interfaces.
+
+## Demo
+Check out the live demo of the application: [Nested-ToDo Demo](https://nested-todos-orcin.vercel.app/)
