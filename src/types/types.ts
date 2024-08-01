@@ -33,3 +33,12 @@ export interface ToolbarProps {
     isComplete: boolean;
   }[];
 }
+
+// modal
+export interface ModalTodoProps {
+  isOpen: boolean;
+  mode: "add" | "edit";
+  task?: Task;
+  onClose: () => void;
+  onSave: (task: Task) => void;
+}

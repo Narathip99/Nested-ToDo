@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { ModalTodoProps } from "../types/types";
+// icons
 import { Plus, SquarePen, Trash } from "lucide-react";
 import { Task } from "../types/types";
-
-interface ModalTodoProps {
-  isOpen: boolean;
-  mode: "add" | "edit";
-  task?: Task;
-  onClose: () => void;
-  onSave: (task: Task) => void;
-}
 
 const ModalTodo: React.FC<ModalTodoProps> = ({
   isOpen,
@@ -26,17 +20,19 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
   >([]);
   const [editSubTaskIndex, setEditSubTaskIndex] = useState<number | null>(null);
 
+  // check mode add or edit
   useEffect(() => {
     if (mode === "edit" && task) {
       setTitle(task.title);
       setDescription(task.description);
       setTag(task.tag);
-      setSubTasks(task.subTask || []); // Provide a default empty array if subTask is undefined
+      setSubTasks(task.subTask || []);
     } else {
       resetForm();
     }
   }, [mode, task]);
 
+  // reset form
   const resetForm = () => {
     setTitle("");
     setDescription("");
@@ -46,6 +42,7 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
     setEditSubTaskIndex(null);
   };
 
+  // handle add sub task
   const handleAddSubTask = () => {
     if (subTask) {
       if (editSubTaskIndex !== null) {
@@ -66,15 +63,26 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
     }
   };
 
+  // handle edit sub task
   const handleEditSubTask = (index: number) => {
     setSubTask(subTasks[index].title);
     setEditSubTaskIndex(index);
   };
 
+  // handle delete sub task
   const handleDeleteSubTask = (index: number) => {
     setSubTasks(subTasks.filter((_, i) => i !== index));
   };
 
+  // handle sub task checkbox change
+  const handleSubTaskCheckboxChange = (index: number) => {
+    const updatedSubTasks = subTasks.map((subTask, i) =>
+      i === index ? { ...subTask, isComplete: !subTask.isComplete } : subTask
+    );
+    setSubTasks(updatedSubTasks);
+  };
+
+  // handle save
   const handleSave = () => {
     if (title && description) {
       const newTask: Task = {
@@ -152,35 +160,44 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
               {editSubTaskIndex !== null ? "Edit Sub Task" : "Add Sub Task"}
             </button>
           </div>
-          <div className="flex flex-col gap-4">
-            {subTasks.map((subTask, index) => (
-              <div
-                key={subTask.id}
-                className="flex justify-between items-center gap-4"
-              >
-                <div className="flex gap-2 items-center">
-                  <p className="text-xl">{subTask.title}</p>
+          {subTasks.length > 0 && (
+            <div className="flex flex-col gap-4">
+              {subTasks.map((subTask, index) => (
+                <div
+                  key={subTask.id}
+                  className="flex justify-between items-center gap-4"
+                >
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="checkbox"
+                      checked={subTask.isComplete}
+                      onChange={() => handleSubTaskCheckboxChange(index)}
+                      className="checkbox"
+                    />
+                    <p className="text-xl">{subTask.title}</p>
+                  </div>
+                  <div className="flex gap-4">
+                    <button
+                      className="btn btn-sm btn-square hover:bg-orange-500"
+                      onClick={() => handleEditSubTask(index)}
+                    >
+                      <SquarePen className="hover:text-white" />
+                    </button>
+                    <button
+                      className="btn btn-sm btn-square hover:bg-red-500"
+                      onClick={() => handleDeleteSubTask(index)}
+                    >
+                      <Trash className="w-5 h-5 hover:text-white" />
+                    </button>
+                  </div>
                 </div>
-                <div className="flex gap-4">
-                  <button
-                    className="btn btn-sm btn-square hover:bg-orange-500"
-                    onClick={() => handleEditSubTask(index)}
-                  >
-                    <SquarePen className="hover:text-white" />
-                  </button>
-                  <button
-                    className="btn btn-sm btn-square hover:bg-red-500"
-                    onClick={() => handleDeleteSubTask(index)}
-                  >
-                    <Trash className="w-5 h-5 hover:text-white" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
           <button
             type="button"
-            className="btn btn-primary mt-4"
+            className="text-base btn btn-primary"
             onClick={handleSave}
           >
             {mode === "add" ? "Add Todo" : "Save Changes"}
