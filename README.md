@@ -1,30 +1,17 @@
-# React + TypeScript + Vite
+# Nested-ToDo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Nested-ToDo is an interview workshop project from CodeSmash. This application allows users to create and manage tasks with nested subtasks and tags. The project is built using Vite, React, TypeScript, Tailwind CSS, and Daisy UI.
 
-Currently, two official plugins are available:
+## Description
+1. Create a To Do List application that allows adding new tasks.
+2. Each task can have nested subtasks up to 2 levels deep.
+3. Each task and subtask can be added, edited, and deleted.
+4. Each task can be tagged with at least one tag
+5. Use state to manage the data of tasks and subtasks.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Technologies Used
+- **Vite:** A fast build tool that leverages the power of modern JavaScript libraries and tools.
+- **React:** A JavaScript library for building user interfaces.
+- **TypeScript:** A statically typed superset of JavaScript that adds optional types.
+- **Tailwind CSS:** A utility-first CSS framework for rapidly building custom user interfaces.
+- **Daisy UI:** A plugin for Tailwind CSS that provides a set of components for building modern user interfaces.
