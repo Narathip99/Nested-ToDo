@@ -72,6 +72,24 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
     );
   };
 
+  // handle checkbox change for subtasks
+  const handleSubTaskCheckboxChange = (taskId: number, subTaskId: number) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId
+          ? {
+              ...task,
+              subTask: task.subTask.map((subTask) =>
+                subTask.id === subTaskId
+                  ? { ...subTask, isComplete: !subTask.isComplete }
+                  : subTask
+              ),
+            }
+          : task
+      )
+    );
+  };
+
   return (
     <section className="grid gap-4 my-4 p-8 w-full bg-base-200 dark:bg-base-300 rounded-lg shadow-lg">
       <Toolbar
@@ -103,8 +121,15 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
                   onChange={() => handleTaskCheckboxChange(task.id)}
                 />
                 <div>
-                  <p className="text-xl font-medium">{task.title}</p>
-                  <p>{task.tag}</p>
+                  {task.isComplete ? (
+                    <p className="text-xl font-medium line-through">
+                      {task.title}
+                    </p>
+                  ) : (
+                    <p className="text-xl font-medium">{task.title}</p>
+                  )}
+
+                  <p className="text-gray-500 text-sm">{task.tag}</p>
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -137,16 +162,29 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
             {expandSubTasks.includes(task.id) &&
               task.subTask &&
               task.subTask.length > 0 && (
-                <div className="mt-4 ml-8">
+                <div className="grid gap-4 ml-8 mt-6">
                   {task.subTask.map((subTask) => (
                     <div
                       key={subTask.id}
-                      className="flex justify-between items-center mb-2 p-2 bg-gray-100 dark:bg-base-200 rounded-lg"
+                      className="flex items-center p-4 gap-4 bg-gray-100 dark:bg-base-200 rounded-lg"
                     >
-                      <div className="flex items-center gap-4">
-                        <div>
-                          <p className="text-lg">{subTask.title}</p>
-                        </div>
+                      <input
+                        type="checkbox"
+                        className="checkbox"
+                        checked={subTask.isComplete}
+                        onChange={() =>
+                          handleSubTaskCheckboxChange(task.id, subTask.id)
+                        }
+                      />
+
+                      <div>
+                        {subTask.isComplete ? (
+                          <p className="text-lg line-through">
+                            {subTask.title}
+                          </p>
+                        ) : (
+                          <p className="text-lg ">{subTask.title}</p>
+                        )}
                       </div>
                     </div>
                   ))}
