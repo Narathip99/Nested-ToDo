@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Search } from "lucide-react";
-import ModalTodo from "./ModalTodo";
+// types
 import { Task } from "../types/types";
+// components
+import ModalTodo from "./ModalTodo";
+import Search from "./Search";
 
 interface AddTodoProps {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
