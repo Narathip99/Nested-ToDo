@@ -18,6 +18,7 @@ export interface Task {
 export interface DisplayTodosProps {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  clearAllTasks: () => void;
 }
 
 // filter
@@ -26,12 +27,8 @@ export interface ToolbarProps {
   setFilter: React.Dispatch<
     React.SetStateAction<"All" | "Active" | "Completed">
   >;
-  filteredTasks: {
-    id: number;
-    title: string;
-    tag: string;
-    isComplete: boolean;
-  }[];
+  filteredTasks: Task[];
+  clearAllTasks: () => void; // Add this line
 }
 
 // modal

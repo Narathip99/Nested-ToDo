@@ -10,7 +10,11 @@ import { ChevronDown, ChevronUp, SquarePen, Trash } from "lucide-react";
 import ModalTodo from "./ModalTodo";
 import Toolbar from "./Toolbar";
 
-const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
+const DisplayTodos: React.FC<DisplayTodosProps> = ({
+  tasks,
+  setTasks,
+  clearAllTasks,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [filter, setFilter] = useState<"All" | "Active" | "Completed">("All");
@@ -97,6 +101,7 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
         filter={filter}
         setFilter={setFilter}
         filteredTasks={filteredTasks}
+        clearAllTasks={clearAllTasks}
       />
 
       {tasks.length === 0 ? (

@@ -6,7 +6,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
   filter,
   setFilter,
   filteredTasks,
+  clearAllTasks,
 }) => {
+  // handle filter
   const handleFilter = (filter: "All" | "Active" | "Completed") => {
     switch (filter) {
       case "All":
@@ -18,6 +20,13 @@ const Toolbar: React.FC<ToolbarProps> = ({
       case "Completed":
         setFilter("Completed");
         break;
+    }
+  };
+
+  // handle clear all tasks
+  const handleClearAll = () => {
+    if (window.confirm("Are you sure! you want to delete all tasks?")) {
+      clearAllTasks();
     }
   };
 
@@ -50,7 +59,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
           Completed
         </button>
       </div>
-      <p className="text-gray-500 font-medium hover:underline cursor-pointer hover:text-red-500">
+      <p
+        onClick={handleClearAll}
+        className="text-gray-500 font-medium hover:underline cursor-pointer hover:text-red-500"
+      >
         Clear All
       </p>
     </div>
