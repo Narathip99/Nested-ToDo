@@ -106,6 +106,9 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
     if (requiredInput(title)) {
       return;
     }
+    if (requiredInput(tags.join(" "))) {
+      return;
+    }
 
     const newTask: Task = {
       id: mode === "add" ? Date.now() : task!.id,
@@ -136,34 +139,45 @@ const ModalTodo: React.FC<ModalTodoProps> = ({
           className="my-4 flex flex-col gap-8"
           onSubmit={(e) => e.preventDefault()}
         >
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Add your title"
-            className="input input-bordered w-full placeholder:text-base"
-          />
+          <div className="grid gap-1">
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Add your title"
+              className="input input-bordered w-full placeholder:text-base"
+            />
+            {requiredInput(title) && (
+              <p className="text-xs text-red-500">Title is required *</p>
+            )}
+          </div>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="textarea textarea-bordered placeholder:text-base w-full"
             placeholder="Add your description"
           ></textarea>
-          <div className="flex gap-4">
-            <input
-              type="text"
-              value={tag}
-              onChange={(e) => setTag(e.target.value)}
-              placeholder="Add your tag"
-              className="input input-bordered w-full placeholder:text-base"
-            />
-            <button
-              type="button"
-              className="btn btn-outline"
-              onClick={handleAddTag}
-            >
-              {editTagIndex !== null ? "Edit Tag" : "Add Tag"}
-            </button>
+          <div className="flex flex-col gap-1">
+            <div className="flex gap-4">
+              <input
+                type="text"
+                value={tag}
+                onChange={(e) => setTag(e.target.value)}
+                placeholder="Add your tag"
+                className="input input-bordered w-full placeholder:text-base"
+              />
+              <button
+                type="button"
+                className="btn btn-outline"
+                onClick={handleAddTag}
+              >
+                {editTagIndex !== null ? "Edit Tag" : "Add Tag"}
+              </button>
+            </div>
+
+            {tags.length === 0 && (
+              <p className="text-xs text-red-500">Tags are required *</p>
+            )}
           </div>
           {tags.length > 0 && (
             <div className="flex flex-col gap-4">

@@ -135,7 +135,18 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({
                     <p className="text-xl font-medium">{task.title}</p>
                   )}
 
-                  <p className="text-gray-500 text-sm">{task.tag}</p>
+                  {task.tags && (
+                    <div className="flex gap-2">
+                      {task.tags.map((tag, index) => (
+                        <div
+                          key={index}
+                          className="text-xs badge badge-ghost mt-1"
+                        >
+                          {tag}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex items-center gap-4">
