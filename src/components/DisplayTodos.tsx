@@ -79,11 +79,12 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({ tasks, setTasks }) => {
         task.id === taskId
           ? {
               ...task,
-              subTask: task.subTask.map((subTask) =>
-                subTask.id === subTaskId
-                  ? { ...subTask, isComplete: !subTask.isComplete }
-                  : subTask
-              ),
+              subTask:
+                task.subTask?.map((subTask) =>
+                  subTask.id === subTaskId
+                    ? { ...subTask, isComplete: !subTask.isComplete }
+                    : subTask
+                ) || [],
             }
           : task
       )

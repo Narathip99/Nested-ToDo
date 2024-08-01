@@ -1,7 +1,7 @@
 import React from "react";
-
 // types
 import { ToolbarProps } from "../types/types";
+
 const Toolbar: React.FC<ToolbarProps> = ({
   filter,
   setFilter,
