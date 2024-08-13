@@ -67,7 +67,6 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({
     }
   };
 
-  //TODO edit here
   // handle checkbox change for main tasks
   const handleTaskCheckboxChange = (taskId: number) => {
     setTasks((prevTasks) =>
@@ -86,7 +85,6 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({
     );
   };
 
-  //TODO edit here
   // handle checkbox change for subtasks
   const handleSubTaskCheckboxChange = (taskId: number, subTaskId: number) => {
     setTasks((prevTasks) =>
@@ -142,7 +140,10 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({
                 <input
                   type="checkbox"
                   className="checkbox"
-                  checked={task.isComplete}
+                  checked={
+                    task.isComplete ||
+                    (task.subTask && task.subTask.every((subTask) => subTask.isComplete))
+                  }
                   onChange={() => handleTaskCheckboxChange(task.id)}
                 />
                 <div>
