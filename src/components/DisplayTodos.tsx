@@ -67,15 +67,26 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({
     }
   };
 
+  //TODO edit here
   // handle checkbox change for main tasks
   const handleTaskCheckboxChange = (taskId: number) => {
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
-        task.id === taskId ? { ...task, isComplete: !task.isComplete } : task
+        task.id === taskId
+          ? {
+              ...task,
+              isComplete: !task.isComplete,
+              subTask: task.subTask?.map((subTask) => ({
+                ...subTask,
+                isComplete: !task.isComplete,
+              })),
+            }
+          : task
       )
     );
   };
 
+  //TODO edit here
   // handle checkbox change for subtasks
   const handleSubTaskCheckboxChange = (taskId: number, subTaskId: number) => {
     setTasks((prevTasks) =>
@@ -83,12 +94,20 @@ const DisplayTodos: React.FC<DisplayTodosProps> = ({
         task.id === taskId
           ? {
               ...task,
-              subTask:
-                task.subTask?.map((subTask) =>
-                  subTask.id === subTaskId
-                    ? { ...subTask, isComplete: !subTask.isComplete }
-                    : subTask
-                ) || [],
+              subTask: task.subTask
+                ? task.subTask.map((subTask) =>
+                    subTask.id === subTaskId
+                      ? { ...subTask, isComplete: !subTask.isComplete }
+                      : subTask
+                  )
+                : [],
+              isComplete: task.subTask
+                ? task.subTask.every((subTask) =>
+                    subTask.id === subTaskId
+                      ? !subTask.isComplete
+                      : subTask.isComplete
+                  )
+                : false,
             }
           : task
       )
